@@ -5,5 +5,5 @@ ingress:
   - hostname: zy-ai-playground.yolocal.cloud
     service: tcp://kubernetes.default.svc.cluster.local:443
   - hostname: zy-aip-k8s-mcp.yolocal.cloud
-    service: http://k8s-mcp-server.zy-ai-gateway.svc.cluster.local:8080
+    service: http://kubernetes-mcp-server.kubernetes-mcp.svc.cluster.local:8080
   - service: http_status:404
