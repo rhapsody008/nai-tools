@@ -1,0 +1,33 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kubernetes-mcp-server
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kubernetes-mcp-server
+      version: latest
+      sourceRef:
+        kind: HelmRepository
+        name: kubernetes-mcp-server
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    # cluster-admin, bound deliberately for a test env — this server is reachable
+    # publicly through the cloudflared tunnel, so the Access policy on
+    # mcp.yourdomain.com is now the only thing standing between the internet and
+    # full cluster control. Revisit if this namespace ever stops being disposable.
+    rbac:
+      create: false
+      extraClusterRoleBindings:
+        - name: kubernetes-mcp-server-admin
+          roleRef:
+            name: cluster-admin
+            external: true
+    ingress:
+      enabled: false # routing handled by cloudflared config.yaml, not a k8s Ingress
