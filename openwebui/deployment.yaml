@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openwebui-deployment
+  labels:
+    app: openwebui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openwebui
+  template:
+    metadata:
+      labels:
+        app: openwebui
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/open-webui/open-webui
+          ports:
+            - name: openwebui
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: cluster-config
