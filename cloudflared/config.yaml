@@ -11,6 +11,4 @@ ingress:
     originRequest:
       noTLSVerify: true
       originServerName: https://pc.yolocal.cloud
-  - hostname: nkp.yolocal.cloud
-    service: http://kommander.kommander.svc.cluster.local:80
   - service: http_status:404
