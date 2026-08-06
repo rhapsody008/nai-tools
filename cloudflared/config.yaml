@@ -4,4 +4,6 @@ credentials-file: /etc/cloudflared/creds/credentials.json
 ingress:
   - hostname: jaeger.yolocal.cloud
     service: http://jaeger-jaeger-operator-jaeger-query.istio-system.svc.cluster.local:16686
+  - hostname: openwebui.yolocal.cloud
+    service: http://openwebui-svc.zytools.svc.cluster.local:8080
   - service: http_status:404
