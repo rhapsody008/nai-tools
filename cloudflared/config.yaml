@@ -6,4 +6,11 @@ ingress:
     service: http://jaeger-jaeger-operator-jaeger-query.istio-system.svc.cluster.local:16686
   - hostname: openwebui.yolocal.cloud
     service: http://openwebui-svc.zytools.svc.cluster.local:8080
+  - hostname: pc.yolocal.cloud
+    service: https://171.16.0.10:9440
+    originRequest:
+      noTLSVerify: true
+      originServerName: https://pc.yolocal.cloud
+  - hostname: nkp.yolocal.cloud
+    service: http://kommander.kommander.svc.cluster.local:80
   - service: http_status:404
