@@ -2,8 +2,6 @@ tunnel: zy
 credentials-file: /etc/cloudflared/creds/credentials.json
 
 ingress:
-  - hostname: zy-ai-playground.yolocal.cloud
-    service: tcp://kubernetes.default.svc.cluster.local:443
-  - hostname: zy-aip-k8s-mcp.yolocal.cloud
-    service: http://kubernetes-mcp-server.kubernetes-mcp.svc.cluster.local:8080
+  - hostname: jaeger.yolocal.cloud
+    service: http://jaeger-jaeger-operator-jaeger-query.istio-system.svc.cluster.local:16686
   - service: http_status:404
