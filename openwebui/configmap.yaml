@@ -6,7 +6,7 @@ metadata:
 data:
   WEBUI_NAME: "NAI Playground"
   CLUSTER_NAME: "ntnx-nkp"
-  STORAGE_DIR: "/app/server/storage"
   ENABLE_SIGNUP: "true"
   DEFAULT_USER_ROLE: "admin"
   COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED: "1"
+  CHAT_RESPONSE_MAX_TOOL_CALL_ITERATIONS: "20"
