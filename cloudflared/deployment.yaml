@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflared
-  namespace: cloudflare
+  namespace: cloudflared
 spec:
   replicas: 2 # keep >=1 fixed replica; do not autoscale, HPA scale-down drops active tunnel connections
   strategy:

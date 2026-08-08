@@ -2,6 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: kubernetes-mcp-server
+  namespace: kubernetes-mcp-server
 spec:
   type: oci
   interval: 30m

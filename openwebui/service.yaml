@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: openwebui-svc
+  namespace: openwebui
   labels:
     app: openwebui
 spec:

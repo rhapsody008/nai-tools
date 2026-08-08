@@ -2,10 +2,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cluster-config
-  namespace: project-demo
+  namespace: openwebui
 data:
   WEBUI_NAME: "NAI Playground"
-  CLUSTER_NAME: "ntnx-nkp"
+  CLUSTER_NAME: "zy-gpu"
   ENABLE_SIGNUP: "true"
   DEFAULT_USER_ROLE: "admin"
   COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED: "1"

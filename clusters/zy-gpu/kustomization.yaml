@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kubernetes-mcp-server
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./apps/kubernetes-mcp
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system # same assumption as the cloudflared Kustomization — rename if yours differs
