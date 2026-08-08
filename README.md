@@ -2,6 +2,17 @@
 
 Currently deployed to the workspace namespace of the workload cluster. Change create the namespace if needed
 
+## Prerequisite
+
+Cloudflare specific: create the secret before the deployment //TODO: sort out sequence. namespace not created yet.
+
+```
+kubectl create secret generic cloudflared-credentials \
+  --namespace=cloudflare \
+  --from-file=credentials.json=czxxz.json \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
 ## Bootstrap
 
 Bootstrap Flux using the tools-flux.yaml. Do once for the cluster.
