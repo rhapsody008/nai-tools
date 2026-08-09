@@ -21,11 +21,12 @@ spec:
   upgrade:
     remediation:
       retries: 3
-  values:
+values:
     defaultSettings:
       defaultDataPath: /var/lib/longhorn/
       guaranteedEngineManagerCPU: 12
       guaranteedReplicaManagerCPU: 12
+      taintToleration: "node-role.kubernetes.io/control-plane:NoSchedule"
     persistence:
       defaultClass: true
       defaultClassReplicaCount: 3
@@ -35,3 +36,11 @@ spec:
       provisionerReplicaCount: 3
       resizerReplicaCount: 3
       snapshotterReplicaCount: 3
+    longhornManager:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          effect: NoSchedule
+    longhornDriver:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          effect: NoSchedule
