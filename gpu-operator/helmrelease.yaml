@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gpu-operator
+  namespace: gpu-operator
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: gpu-operator
+      version: "v26.3.3" # current latest as of writing — Helm's version field needs a real
+                          # pin, not "latest"; check https://catalog.ngc.nvidia.com/orgs/nvidia/-/helm-charts/gpu-operator
+                          # for newer releases and bump deliberately
+      sourceRef:
+        kind: HelmRepository
+        name: nvidia
+        namespace: gpu-operator
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    driver:
+      enabled: true # explicit, matches chart default — the one option requested
