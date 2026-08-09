@@ -4,11 +4,13 @@ Currently deployed to the workspace namespace of the workload cluster. Change cr
 
 ## Prerequisite
 
-Cloudflare specific: create the secret before the deployment //TODO: sort out sequence. namespace not created yet.
+Cloudflare specific: create the secret before the deployment. Create the namespace if not exist.
 
 ```
+kubectl create namespace cloudflared
+
 kubectl create secret generic cloudflared-credentials \
-  --namespace=cloudflare \
+  --namespace=cloudflared \
   --from-file=credentials.json=czxxz.json \
   --dry-run=client -o yaml | kubectl apply -f -
 ```
