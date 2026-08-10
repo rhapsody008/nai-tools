@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-rwx-gpu
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  numberOfReplicas: "1"
+  nodeSelector: "gpu-node" # File storage pinned to GPU server; Need to tag the node/disk (in longhorn) to gpu-node after longhorn is installed
+  fsType: "ext4"
