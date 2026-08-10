@@ -27,4 +27,4 @@ spec:
         patchStrategicMerge:
           spec:
             nodeSelector:
-              longhorn-system-managed: true
+              longhorn-system-managed: "true"
