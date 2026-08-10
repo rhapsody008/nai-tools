@@ -23,21 +23,8 @@ spec:
 ```
 (Or via UI: Node → Edit Node and Disks → add tag gpu-node to the node and each disk.)
 
-2. Create a StorageClass for RWX volumes that targets that tag
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: longhorn-rwx-gpu
-provisioner: driver.longhorn.io
-allowVolumeExpansion: true
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
-parameters:
-  numberOfReplicas: "1"
-  nodeSelector: "gpu-node"
-  fsType: "ext4"
-```
+2. Create a StorageClass for RWX volumes that targets that tag - see gpu-storageclass.yaml
+
 numberOfReplicas: "1" because if the GPU node is the only one tagged, that's the ceiling on how many replicas can be placed anyway — Longhorn requires distinct nodes per replica.
 
 Any PVC created with accessModes: [ReadWriteMany] against this StorageClass will have its underlying volume's replica forced onto the tagged node.

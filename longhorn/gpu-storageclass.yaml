@@ -10,3 +10,4 @@ parameters:
   numberOfReplicas: "1"
   nodeSelector: "gpu-node" # File storage pinned to GPU server; Need to tag the node/disk (in longhorn) to gpu-node after longhorn is installed
   fsType: "ext4"
+  dataLocality: "strict-local" # for PVC deployment on GPU server
