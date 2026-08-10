@@ -1,0 +1,30 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: pin-nai-admin-to-l40
+  annotations:
+    policies.kyverno.io/title: Pin nai-admin pods to GPU node
+    policies.kyverno.io/category: Scheduling
+    policies.kyverno.io/description: >-
+      Temporary workaround: mutates every Pod created in the nai-admin
+      namespace to add a nodeSelector targeting the l40 GPU node, so
+      RWX-backed PVCs (which cannot use Longhorn strict-local data
+      locality) stay co-located with the workloads consuming them.
+      Remove this policy once per-component nodeSelector/affinity is
+      wired into the nai-core Helm chart, or once Longhorn RWX gains a
+      stronger locality guarantee.
+spec:
+  rules:
+    - name: add-nodeselector
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - nai-admin
+      mutate:
+        patchStrategicMerge:
+          spec:
+            nodeSelector:
+              longhorn-system-managed: true

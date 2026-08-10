@@ -28,3 +28,9 @@ kubectl apply tools-flux.yaml
 2. create <tool>.yaml in ./src dir. - Commit the change and this tool will be auto synced by tools-flux.yaml.
 
 ## NAI Pinning for GPU node - Kyverno + Longhorn
+
+Longhorn StorageClass: set to deploy on labels gpu-node
+System Managed Components Node Selector in Longhorn setting: set to longhorn-system-managed:true
+GPU Node label: set to longhorn-system-managed:true
+
+Kyverno policy: pods in namepace nai-admin will be scheduled on nodes with label longhorn-system-managed:true
