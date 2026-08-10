@@ -8,9 +8,7 @@ spec:
   chart:
     spec:
       chart: gpu-operator
-      version: "v26.3.3" # current latest as of writing — Helm's version field needs a real
-                          # pin, not "latest"; check https://catalog.ngc.nvidia.com/orgs/nvidia/-/helm-charts/gpu-operator
-                          # for newer releases and bump deliberately
+      version: "*"
       sourceRef:
         kind: HelmRepository
         name: nvidia

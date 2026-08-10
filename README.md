@@ -27,3 +27,4 @@ kubectl apply tools-flux.yaml
 1. create a new dir with necessary files. one kustomization.yaml and other k8s resources.
 2. create <tool>.yaml in ./src dir. - Commit the change and this tool will be auto synced by tools-flux.yaml.
 
+## NAI Pinning for GPU node - Kyverno + Longhorn
