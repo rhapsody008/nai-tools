@@ -28,3 +28,23 @@ spec:
           spec:
             nodeSelector:
               longhorn-system-managed: "true"
+
+    - name: default-storageclass-for-pvc
+      match:
+        any:
+          - resources:
+              kinds:
+                - PersistentVolumeClaim
+              namespaces:
+                - nai-admin
+      preconditions:
+        all:
+          # Only apply when the PVC doesn't already specify a storageClassName —
+          # never override an explicit choice made by the chart or the user.
+          - key: "{{ request.object.spec.storageClassName || '' }}"
+            operator: Equals
+            value: ""
+      mutate:
+        patchStrategicMerge:
+          spec:
+            storageClassName: longhorn-rwx-gpu
