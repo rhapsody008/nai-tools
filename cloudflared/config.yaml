@@ -6,10 +6,10 @@ ingress:
     service: http://jaeger-jaeger-operator-jaeger-query.istio-system.svc.cluster.local:16686
   - hostname: openwebui.yolocal.cloud
     service: http://openwebui-svc.openwebui.svc.cluster.local:8080
+  - hostname: zy-gpu-k8s-mcp.yolocal.cloud
+    service: http://kubernetes-mcp-server.kubernetes-mcp-server.svc.cluster.local:8080
   - hostname: longhorn.yolocal.cloud
     service: http://longhorn-frontend.longhorn-system.svc.cluster.local:80
-  - hostname: f5bastion-windows.yolocal.cloud
-    service: rdp://171.16.0.8:3389
   - hostname: pc.yolocal.cloud
     service: https://171.16.0.10:9440
     originRequest:
