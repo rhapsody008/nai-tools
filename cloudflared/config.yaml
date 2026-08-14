@@ -10,6 +10,8 @@ ingress:
     service: http://kubernetes-mcp-server.kubernetes-mcp-server.svc.cluster.local:8080
   - hostname: longhorn.yolocal.cloud
     service: http://longhorn-frontend.longhorn-system.svc.cluster.local:80
+  - hostname: zy-bastion.yolocal.cloud
+    service: ssh://171.16.0.9:22
   - hostname: pc.yolocal.cloud
     service: https://171.16.0.10:9440
     originRequest:
