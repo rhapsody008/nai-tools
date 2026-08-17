@@ -7,6 +7,8 @@ metadata:
     app: openwebui
 spec:
   replicas: 1
+  strategy:
+    type: Recreate   # avoids two pods fighting over the RWO volume during rollout
   selector:
     matchLabels:
       app: openwebui
@@ -24,3 +26,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: cluster-config
+          volumeMounts:
+            - name: data
+              mountPath: /app/backend/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: openwebui-data
