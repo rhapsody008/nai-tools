@@ -24,7 +24,7 @@ spec:
     # mcp.yourdomain.com is now the only thing standing between the internet and
     # full cluster control. Revisit if this namespace ever stops being disposable.
     rbac:
-      create: false
+      create: true
       extraClusterRoleBindings:
         - name: kubernetes-mcp-server-admin
           roleRef:
