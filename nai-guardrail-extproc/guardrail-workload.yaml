@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guardrail-extproc
+  namespace: nai-system
+  labels:
+    app: guardrail-extproc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: guardrail-extproc
+  template:
+    metadata:
+      labels:
+        app: guardrail-extproc
+    spec:
+      # public GHCR image — no imagePullSecrets needed
+      containers:
+        - name: guardrail-extproc
+          image: ghcr.io/rhapsody008/guardrail-extproc:latest
+          imagePullPolicy: Always
+          ports:
+            - name: grpc
+              containerPort: 9002
+          env:
+            - name: GUARDRAIL_ENDPOINT
+              value: "https://nai.yolocal.cloud/enterpriseai/v1" # TODO: point at your real guardrail model endpoint
+            - name: GUARDRAIL_MODEL
+              value: "llama-guard-3-8b"
+            - name: GUARDRAIL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: guardrail-extproc-creds
+                  key: GUARDRAIL_API_KEY
+          # the binary has no grpc.health.v1 health service, so probe
+          # the port directly rather than via grpc_health_probe
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guardrail-extproc
+  namespace: nai-system
+spec:
+  selector:
+    app: guardrail-extproc
+  ports:
+    - name: grpc
+      port: 9002
+      targetPort: grpc

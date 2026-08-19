@@ -1,0 +1,28 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: guardrail-extproc-policy
+  namespace: nai-system # must match the Gateway's namespace — Gateway API policy attachment rule
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: nai-ingress-gateway
+  extProc:
+    - backendRefs:
+        - name: guardrail-extproc
+          port: 9002
+      processingMode:
+        request:
+          body: Buffered
+        response:
+          body: Buffered
+      # fail-open here means Envoy lets the request through if THIS
+      # policy's connection to the extproc service fails (e.g. pod
+      # unreachable). This is separate from the fail-closed behavior
+      # inside guardrail_extproc.go, which governs what happens when
+      # the extproc reaches the *guardrail model* but that call fails.
+      # Keep this false to fail-closed at the Envoy level too, matching
+      # the in-service behavior — flip only if an extproc outage should
+      # not be able to block all traffic.
+      failOpen: false
