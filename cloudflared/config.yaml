@@ -12,6 +12,8 @@ ingress:
     service: http://longhorn-frontend.longhorn-system.svc.cluster.local:80
   - hostname: zy-bastion.yolocal.cloud
     service: ssh://171.16.0.9:22
+  - hostname: nkplab.yolocal.cloud
+    service: http://171.16.0.9:3000
   - hostname: pc.yolocal.cloud
     service: https://171.16.0.10:9440
     originRequest:
