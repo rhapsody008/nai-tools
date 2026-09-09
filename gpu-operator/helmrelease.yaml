@@ -22,4 +22,3 @@ spec:
   values:
     driver:
       enabled: true # explicit, matches chart default — the one option requested
-      version: "580.178.04"
