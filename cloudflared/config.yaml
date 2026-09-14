@@ -8,8 +8,6 @@ ingress:
     service: http://openwebui-svc.openwebui.svc.cluster.local:8080
   - hostname: zy-gpu-k8s-mcp.yolocal.cloud
     service: http://kubernetes-mcp-server.kubernetes-mcp-server.svc.cluster.local:8080
-  - hostname: zy-ntnx-mcp.yolocal.cloud
-    service: http://mcp-nai-ae81778b-24ac-4649-a948-c8.nai-admin-extensions.svc.cluster.local:8000
   - hostname: longhorn.yolocal.cloud
     service: http://longhorn-frontend.longhorn-system.svc.cluster.local:80
   - hostname: zy-bastion.yolocal.cloud
