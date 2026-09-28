@@ -32,25 +32,45 @@ spec:
       # simpler/faster than routing back out through the public URL.
       ONYX_SERVER_URL: "http://onyx-api-service.onyx.svc.cluster.local:8080"
 
-    # SSO (Entra ID OIDC) is configured in the Onyx admin panel, not here —
-    # see README.md. auth.userauth below is unrelated: it's the secret
-    # Onyx uses to sign its own session/JWT tokens, needed regardless of
-    # which SSO provider is configured.
+    # TEST ENV ONLY: secrets are inlined here (chart renders its own Secret
+    # from these `values:` blocks) instead of pointing at existingSecret —
+    # simpler for a throwaway env, but it means these plaintext credentials
+    # live in git. Do not do this for anything that isn't disposable; swap
+    # back to existingSecret (see README.md) once this is more than a test.
+    #
+    # SSO (Entra ID OIDC) is configured in the Onyx admin panel, not here.
+    # auth.userauth below is unrelated: it's the secret Onyx uses to sign
+    # its own session/JWT tokens, needed regardless of SSO provider.
     auth:
       userauth:
         enabled: true
-        existingSecret: onyx-userauth
+        values:
+          user_auth_secret: "test-user-auth-secret-change-me"
       postgresql:
-        existingSecret: onyx-postgresql
+        values:
+          username: "postgres"
+          password: "test-postgres-password"
       opensearch:
-        existingSecret: onyx-opensearch
+        values:
+          opensearch_admin_username: "admin"
+          opensearch_admin_password: "test-opensearch-password"
       objectstorage:
-        existingSecret: onyx-objectstorage
+        values:
+          rootUser: "onyx-minio"
+          rootPassword: "test-minio-password"
+          s3_aws_access_key_id: "onyx-minio"
+          s3_aws_secret_access_key: "test-minio-password"
       # Ed25519 keypair Craft uses to push scheduled-task results back to
-      # the API. Create the secret before install (see README.md).
+      # the API. Unlike the passwords above this can't be hand-typed —
+      # generate a real one and paste it in (see README.md for the
+      # one-liner). Leaving this as-is will fail Craft's push auth.
       sandboxPushSecret:
         enabled: true
-        existingSecret: onyx-sandbox-push-secret
+        values:
+          private_key: |
+            -----BEGIN PRIVATE KEY-----
+            MC4CAQAwBQYDK2VwBCIEICU/EoBKVamgLQEIJS3gJg2LMywgOd7x3cIineWhdNnW
+            -----END PRIVATE KEY-----
 
     # --- MCP server (off by default in the chart) ---
     mcpServer:

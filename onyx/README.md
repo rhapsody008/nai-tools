@@ -35,52 +35,31 @@ install with empty/default secrets.
   approval). SSO (Entra ID OIDC) is deferred for now — see "Open items";
   add an app registration for it when that's revisited.
 
-## 2. Secrets (create before install)
+## 2. Secrets
 
-`helmrelease.yaml` points every credential at an `existingSecret` — the
-chart never gets to fall back to its default/weak values. Several secret
-names are shared between the chart's bundled subcharts (Postgres/OpenSearch/
-MinIO) and the Onyx backend's own config, so each secret below needs *all*
-the listed keys, not just the ones one consumer uses.
+**Test env only:** credentials are inlined directly under `auth.*.values`
+in `helmrelease.yaml` (the chart renders its own Secret from them) instead
+of pointing at `existingSecret` — no `kubectl create secret` step needed,
+but it means plaintext credentials live in git. Do not do this outside a
+disposable environment.
+
+To go back to out-of-band secrets (recommended for anything real): drop
+each `auth.<x>.values` block, add `existingSecret: onyx-<x>` instead, and
+create the secret yourself, e.g.:
 
 ```
-# Postgres — used by both the CloudNativePG cluster and the Onyx backend
 kubectl create secret generic onyx-postgresql \
   --namespace onyx \
   --from-literal=username='postgres' \
   --from-literal=password="$(openssl rand -base64 24)"
-
-# OpenSearch — used by both the OpenSearch cluster and the Onyx backend
-kubectl create secret generic onyx-opensearch \
-  --namespace onyx \
-  --from-literal=opensearch_admin_username='admin' \
-  --from-literal=opensearch_admin_password="$(openssl rand -base64 24)"
-
-# MinIO — used by both the MinIO chart (rootUser/rootPassword) and the
-# backend's S3 client (s3_aws_access_key_id/s3_aws_secret_access_key).
-# Never leave this on the chart's default credentials.
-MINIO_USER='onyx-minio'
-MINIO_PASS="$(openssl rand -base64 24)"
-kubectl create secret generic onyx-objectstorage \
-  --namespace onyx \
-  --from-literal=rootUser="$MINIO_USER" \
-  --from-literal=rootPassword="$MINIO_PASS" \
-  --from-literal=s3_aws_access_key_id="$MINIO_USER" \
-  --from-literal=s3_aws_secret_access_key="$MINIO_PASS"
-
-# Session/JWT signing secret for Onyx's own auth (separate from SSO,
-# which is configured in the admin panel — see step 4)
-kubectl create secret generic onyx-userauth \
-  --namespace onyx \
-  --from-literal=user_auth_secret="$(openssl rand -base64 32)"
-
-# Ed25519 keypair Craft uses to push scheduled-task results back to the API
-openssl genpkey -algorithm ed25519 -out /tmp/onyx-sandbox-push.pem
-kubectl create secret generic onyx-sandbox-push-secret \
-  --namespace onyx \
-  --from-file=private_key=/tmp/onyx-sandbox-push.pem
-rm /tmp/onyx-sandbox-push.pem
 ```
+
+— same idea for `onyx-opensearch` (`opensearch_admin_username`/
+`opensearch_admin_password`), `onyx-objectstorage` (`rootUser`/
+`rootPassword`/`s3_aws_access_key_id`/`s3_aws_secret_access_key` — MinIO
+chart and backend S3 client share this one secret), `onyx-userauth`
+(`user_auth_secret`), and `onyx-sandbox-push-secret` (`private_key`, an
+Ed25519 PEM from `openssl genpkey -algorithm ed25519`).
 
 Redis auth is left on the chart's generated secret (`auth.redis`) since
 Redis is ClusterIP-only within the `onyx` namespace — tighten this too if
