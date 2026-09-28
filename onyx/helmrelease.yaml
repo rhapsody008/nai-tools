@@ -23,6 +23,20 @@ spec:
     remediation:
       retries: 3
   values:
+    # This cluster already runs a shared CNPG operator (kommander-cloudnative-pg
+    # in zy-gpu-workspace, v1.29.0) managing other Postgres Clusters (e.g. NAI's
+    # own nai-db-iep). CNPG's webhook configs are cluster-scoped singletons, so
+    # the chart's bundled operator (v1.27.0) would silently take over that
+    # webhook and fight the existing operator over every Cluster in the
+    # cluster — this actually happened once already and started cycling
+    # nai-db-iep too. The chart has a documented escape hatch for exactly this
+    # (see the postgresqlOperator/installCRDs comments in values.yaml,
+    # https://github.com/onyx-dot-app/onyx/issues/12490): keep
+    # postgresql.enabled: true (still renders the onyx-pg Cluster CR + secrets)
+    # but skip the bundled operator and its CRD copies, so the existing shared
+    # operator picks up and reconciles onyx-pg instead.
+    postgresqlOperator:
+      enabled: false
     configMap:
       # --- Craft ---
       ENABLE_CRAFT: "true"
