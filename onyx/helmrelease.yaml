@@ -1,0 +1,108 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: onyx
+  namespace: onyx
+spec:
+  interval: 30m
+  # Pinned deliberately (see plan's "Open items" — Craft moves fast).
+  # Test every upgrade against a non-prod release before bumping this.
+  chart:
+    spec:
+      chart: onyx
+      version: "0.8.38"
+      sourceRef:
+        kind: HelmRepository
+        name: onyx
+        namespace: onyx
+      interval: 12h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    configMap:
+      # --- Craft ---
+      ENABLE_CRAFT: "true"
+      SANDBOX_BACKEND: "kubernetes"
+      # Full API base URL (path prefix included) — required once Craft is on.
+      # Reachable from inside the cluster; using the in-cluster Service is
+      # simpler/faster than routing back out through the public URL.
+      ONYX_SERVER_URL: "http://onyx-api-service.onyx.svc.cluster.local:8080"
+
+    # SSO (Entra ID OIDC) is configured in the Onyx admin panel, not here —
+    # see README.md. auth.userauth below is unrelated: it's the secret
+    # Onyx uses to sign its own session/JWT tokens, needed regardless of
+    # which SSO provider is configured.
+    auth:
+      userauth:
+        enabled: true
+        existingSecret: onyx-userauth
+      postgresql:
+        existingSecret: onyx-postgresql
+      opensearch:
+        existingSecret: onyx-opensearch
+      objectstorage:
+        existingSecret: onyx-objectstorage
+      # Ed25519 keypair Craft uses to push scheduled-task results back to
+      # the API. Create the secret before install (see README.md).
+      sandboxPushSecret:
+        enabled: true
+        existingSecret: onyx-sandbox-push-secret
+
+    # --- MCP server (off by default in the chart) ---
+    mcpServer:
+      enabled: true
+      corsOrigins: "" # set to your MCP clients' origins, comma-separated
+
+    # --- Slack bot ---
+    # Leave disabled until the Slack app is approved and bot/app tokens
+    # exist — flip to true and set auth values once you have them.
+    slackbot:
+      enabled: false
+
+    # Craft's scheduled-task executor must stay single-replica: with >1
+    # replica, more than one worker can pick up the same scheduled task
+    # and process/upload the same notes twice.
+    celery_worker_scheduled_tasks:
+      replicaCount: 1
+
+    # Stateless frontend/API — safe to run >1 replica. Chart's default
+    # readinessProbe is a plain TCP/health check, fine at this replica
+    # count (only /health/ready, which isn't the default, needs care here).
+    webserver:
+      replicaCount: 2
+    api:
+      replicaCount: 2
+
+    # sandboxPod.nodeSelector/tolerations already default to
+    # onyx.app/workload=sandbox / workload=sandbox:NoSchedule, matching the
+    # node label/taint applied out-of-band (see README.md) — no override
+    # needed here.
+
+    # --- Sizing ---
+    # NAI does embedding and reranking, so the in-cluster model servers
+    # only need to be reachable, not sized for inference — trimmed to the
+    # small-tier snippet from SIZING.md (up to ~200 users / <500k docs).
+    inferenceCapability:
+      resources:
+        requests:
+          cpu: 500m
+          memory: 3Gi
+        limits:
+          cpu: 3000m
+          memory: 10Gi
+    indexCapability:
+      resources:
+        requests:
+          cpu: 500m
+          memory: 3Gi
+        limits:
+          cpu: 3000m
+          memory: 6Gi
+    # opensearch.opensearchJavaOpts already defaults to "-Xmx4g -Xms4g"
+    # with an 8Gi container memory limit — leave the 4g heap alone as
+    # documents grow, but raise opensearch.resources.limits.memory (and
+    # persistence.size) before the container itself gets memory-pressured.

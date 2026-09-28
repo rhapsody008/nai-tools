@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onyx
+# onyx-sandboxes (Craft sandbox pods) is created by the chart itself
+# (templates/sandbox-namespace.yaml) when configMap.ENABLE_CRAFT is "true" —
+# do not create it here.
