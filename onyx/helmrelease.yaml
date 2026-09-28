@@ -45,21 +45,21 @@ spec:
       userauth:
         enabled: true
         values:
-          user_auth_secret: "test-user-auth-secret-change-me"
+          user_auth_secret: "ntnx/4NAI!!"
       postgresql:
         values:
           username: "postgres"
-          password: "test-postgres-password"
+          password: "ntnx/4NAI!!"
       opensearch:
         values:
           opensearch_admin_username: "admin"
-          opensearch_admin_password: "test-opensearch-password"
+          opensearch_admin_password: "ntnx/4NAI!!"
       objectstorage:
         values:
           rootUser: "onyx-minio"
-          rootPassword: "test-minio-password"
+          rootPassword: "ntnx/4NAI!!"
           s3_aws_access_key_id: "onyx-minio"
-          s3_aws_secret_access_key: "test-minio-password"
+          s3_aws_secret_access_key: "ntnx/4NAI!!"
       # Ed25519 keypair Craft uses to push scheduled-task results back to
       # the API. Unlike the passwords above this can't be hand-typed —
       # generate a real one and paste it in (see README.md for the
