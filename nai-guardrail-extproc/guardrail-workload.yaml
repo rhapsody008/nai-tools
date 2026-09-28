@@ -18,16 +18,16 @@ spec:
       # public GHCR image — no imagePullSecrets needed
       containers:
         - name: guardrail-extproc
-          image: ghcr.io/rhapsody008/guardrail-extproc:latest
+          image: ghcr.io/rhapsody008/nai-guardrail-extproc:latest
           imagePullPolicy: Always
           ports:
             - name: grpc
               containerPort: 9002
           env:
             - name: GUARDRAIL_ENDPOINT
-              value: "https://nai.yolocal.cloud/enterpriseai/v1" # TODO: point at your real guardrail model endpoint
-            - name: GUARDRAIL_MODEL
-              value: "llama-guard-3-8b"
+              value: "https://us1.calypsoai.app/backend/v1" # CAI base URL — the extproc appends /scans itself
+            - name: GUARDRAIL_DEBUG
+              value: "true" # logs raw prompt content + full CAI response — fine for this test deployment, turn off before anything handles real user data
             - name: GUARDRAIL_API_KEY
               valueFrom:
                 secretKeyRef:
