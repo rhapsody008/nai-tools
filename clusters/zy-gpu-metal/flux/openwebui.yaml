@@ -1,11 +1,12 @@
+---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: gpu-operator
+  name: openwebui
   namespace: zy-gpu-workspace
 spec:
   interval: 2m
-  path: ../gpu-operator
+  path: ./clusters/zy-gpu-metal/overlays/openwebui
   prune: true
   sourceRef:
     kind: GitRepository

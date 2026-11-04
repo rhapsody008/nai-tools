@@ -1,11 +1,12 @@
+---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: kyverno
+  name: cloudflared
   namespace: zy-gpu-workspace
 spec:
   interval: 2m
-  path: ../kyverno
+  path: ./apps/cloudflared
   prune: true
   sourceRef:
     kind: GitRepository

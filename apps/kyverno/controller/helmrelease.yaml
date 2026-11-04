@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: kyverno
+      version: "*"     
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+        namespace: kyverno
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    # Helm-installs the CRDs on first install; on upgrades CRDs are only
+    # ever added, never removed/mutated by Helm — that's expected/safe.
+    crds:
+      install: true
+    # Fine for a single/small cluster workaround; revisit for HA later.
+    replicaCount: 1

@@ -1,0 +1,25 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: zy-tools
+  namespace: zy-gpu-workspace
+spec:
+  interval: 1m
+  url: https://github.com/rhapsody008/nai-tools.git
+  ref:
+    branch: main
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: zy-tools
+  namespace: zy-gpu-workspace
+spec:
+  interval: 3m
+  path: ./clusters/zy-gpu/flux
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: zy-tools

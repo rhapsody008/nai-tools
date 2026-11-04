@@ -2,11 +2,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: kubernetes-mcp-server
+  name: kyverno
   namespace: zy-gpu-workspace
 spec:
   interval: 2m
-  path: ../kubernetes-mcp
+  path: ./apps/kyverno
   prune: true
   sourceRef:
     kind: GitRepository

@@ -1,8 +1,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: onyx
-  namespace: onyx
+  name: nvidia
+  namespace: gpu-operator
 spec:
   interval: 30m
-  url: https://onyx-dot-app.github.io/onyx/
+  url: https://helm.ngc.nvidia.com/nvidia
