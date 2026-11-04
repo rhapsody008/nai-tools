@@ -12,7 +12,6 @@ clusters/<cluster>/
     kustomization.yaml        # list of tools enabled on this cluster
   overlays/<tool>/            # cluster-specific patches (only when needed)
 manual/                       # not managed by Flux, applied by hand
-src/                          # temporary shim for zy-gpu, see below
 ```
 
 Clusters:
@@ -40,11 +39,24 @@ Bootstrap Flux using the cluster's tools-flux.yaml. Do once per cluster.
 kubectl apply -f clusters/<cluster>/tools-flux.yaml
 ```
 
-### zy-gpu migration note
+## Onboarding a new cluster
 
-zy-gpu was bootstrapped with the old root `tools-flux.yaml` (path `./src`). `src/kustomization.yaml` points at `clusters/zy-gpu/flux` so it keeps working unchanged. To finish the migration:
-1. `kubectl apply -f clusters/zy-gpu/tools-flux.yaml` (updates the `zy-tools` root Kustomization path in place).
-2. Then delete `src/` in a later commit.
+1. **Prepare the cluster.** Attach it to the NKP workspace so Flux (kommander-flux) is running in `zy-gpu-workspace`.
+2. **Create the cluster folder** by copying an existing one, e.g. `cp -R clusters/zy-gpu-metal clusters/<cluster>`.
+   - `tools-flux.yaml`: set the root path to `./clusters/<cluster>/flux`.
+   - `flux/kustomization.yaml`: keep only the tools you want to start with. Add the rest one at a time later.
+   - `flux/*.yaml`: on a fresh cluster use `apps/kyverno/controller` + `apps/kyverno/policies` (as in zy-gpu-metal), not `apps/kyverno`.
+   - `overlays/`: patch anything cluster-specific (e.g. openwebui `CLUSTER_NAME`). Point the matching `flux/<tool>.yaml` path at the overlay.
+3. **Check the render** before committing:
+   ```
+   kubectl kustomize clusters/<cluster>/flux
+   kubectl kustomize clusters/<cluster>/overlays/<tool>
+   ```
+4. **Create secrets** needed by the enabled tools (see Prerequisite), then commit and push.
+5. **Bootstrap:** `kubectl apply -f clusters/<cluster>/tools-flux.yaml`
+6. **Verify:** `kubectl -n zy-gpu-workspace get kustomizations,gitrepositories` should show `zy-tools` and each tool Ready.
+7. **Longhorn GPU pinning** (if longhorn + kyverno are enabled): tag the GPU node and its disks `gpu-node` and set the labels described in [apps/longhorn/README.md](apps/longhorn/README.md) and below, before NAI creates PVCs in `nai-admin`.
+8. **Roll more tools over** by adding lines to `flux/kustomization.yaml` and pushing.
 
 ## Adding new tools
 1. Create `apps/<tool>/` with a kustomization.yaml and other k8s resources.
@@ -61,4 +73,4 @@ GPU Node label: set to longhorn-system-managed:true
 
 Kyverno policy: pods in namepace nai-admin will be scheduled on nodes with label longhorn-system-managed:true
 
-Kyverno is split into `apps/kyverno/controller` and `apps/kyverno/policies`, because the ClusterPolicy CRD comes from the chart. New clusters sync them as two Flux Kustomizations (`kyverno-policies` dependsOn `kyverno`); zy-gpu syncs both together via `apps/kyverno`.
+Kyverno is split into `apps/kyverno/controller` and `apps/kyverno/policies`, because the ClusterPolicy CRD comes from the chart. New clusters sync them as two Flux Kustomizations (`kyverno-policies` dependsOn `kyverno`); zy-gpu syncs both together via `apps/kyverno` since kyverno was already installed there.
