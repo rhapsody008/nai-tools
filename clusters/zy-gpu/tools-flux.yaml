@@ -17,7 +17,7 @@ metadata:
   name: zy-tools
   namespace: zy-gpu-workspace
 spec:
-  interval: 3m
+  interval: 10m
   path: ./clusters/zy-gpu/flux
   prune: true
   sourceRef:
