@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - gpu-operator.yaml
   # - longhorn.yaml
-  # - kyverno.yaml
-  # - kyverno-policies.yaml
+  - kyverno.yaml
+  - kyverno-policies.yaml
   # - kubernetes-mcp-server.yaml
   # - openwebui.yaml
