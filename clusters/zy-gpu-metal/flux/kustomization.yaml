@@ -4,7 +4,7 @@ kind: Kustomization
 # cloudflared stays on zy-gpu for now.
 resources:
   - gpu-operator.yaml
-  # - longhorn.yaml
+  - longhorn.yaml
   - kyverno.yaml
   - kyverno-policies.yaml
   # - kubernetes-mcp-server.yaml
