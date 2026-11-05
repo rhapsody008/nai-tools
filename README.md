@@ -68,9 +68,9 @@ kubectl apply -f clusters/<cluster>/tools-flux.yaml
 Longhorn is only used for the nai-admin RWX volumes below; everything else uses the default storageclass (nutanix-volume).
 
 Longhorn StorageClass: set to deploy on labels gpu-node
-System Managed Components Node Selector in Longhorn setting: set to node.cluster.x-k8s.io/longhorn-system-managed:true
+System Managed Components Node Selector in Longhorn setting: node.cluster.x-k8s.io/longhorn-system-managed:true, set via `defaultSettings` in [apps/longhorn/helmrelease.yaml](apps/longhorn/helmrelease.yaml). This pins all Longhorn system components, including share-manager (the RWX NFS server), to the GPU node. Only applied while no Longhorn volumes are attached, so label the node before installing Longhorn.
 GPU Node label: set to node.cluster.x-k8s.io/longhorn-system-managed:true (set on the NKP node pool; unprefixed labels are not synced to nodes by Cluster API)
 
-Kyverno policy: pods in namepace nai-admin will be scheduled on nodes with label node.cluster.x-k8s.io/longhorn-system-managed:true
+Kyverno policy: pods in namepace nai-admin will be scheduled on nodes with label node.cluster.x-k8s.io/longhorn-system-managed:true, and nai-admin PVCs without a storageClassName default to longhorn-rwx-gpu.
 
 Kyverno is split into `apps/kyverno/controller` and `apps/kyverno/policies`, because the ClusterPolicy CRD comes from the chart. New clusters sync them as two Flux Kustomizations (`kyverno-policies` dependsOn `kyverno`); zy-gpu syncs both together via `apps/kyverno` since kyverno was already installed there.

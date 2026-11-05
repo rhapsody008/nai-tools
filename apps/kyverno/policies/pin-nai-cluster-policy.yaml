@@ -48,19 +48,3 @@ spec:
         patchStrategicMerge:
           spec:
             storageClassName: longhorn-rwx-gpu
-
-    - name: pin-share-manager-to-l40
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-              namespaces:
-                - longhorn-system
-              names:
-                - "share-manager-*"
-      mutate:
-        patchStrategicMerge:
-          spec:
-            nodeSelector:
-              node.cluster.x-k8s.io/longhorn-system-managed: "true"

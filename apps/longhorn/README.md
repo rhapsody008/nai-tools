@@ -38,15 +38,15 @@ Set the label `node.cluster.x-k8s.io/longhorn-system-managed=true` on the GPU no
 ```bash
 kubectl label node <gpu-node-name> node.cluster.x-k8s.io/longhorn-system-managed=true
 ```
-Then set the Longhorn global setting:
+The Longhorn global setting "System Managed Components Node Selector" is set in [helmrelease.yaml](helmrelease.yaml) (`defaultSettings.systemManagedComponentsNodeSelector: node.cluster.x-k8s.io/longhorn-system-managed:true`), so nothing to set by hand.
+
+⚠️ Note: this setting is global — it affects all Longhorn system pods (instance-manager, share-manager, backing-image-manager, engine-image daemonset, CSI components), not just RWX ones. Given you already want the whole node pinned as the sole Longhorn worker, this should be exactly what you want — but it means block/RWO volume instance-managers also get confined to this node too (which you'd already set up in Part 2 anyway).
+
+⚠️ Longhorn only applies a change to this setting while no Longhorn volumes are attached. Make sure the GPU node is labelled before Longhorn is installed (or before any PVCs exist); changing it later means detaching all volumes first. Check the live value with:
 
 ```bash
-kubectl -n longhorn-system patch settings.longhorn.io system-managed-components-node-selector \
-  --type merge -p '{"value":"node.cluster.x-k8s.io/longhorn-system-managed:true"}'
+kubectl -n longhorn-system get settings.longhorn.io system-managed-components-node-selector
 ```
-(Or via UI: Settings → General → "System Managed Components Node Selector".)
-
-⚠️ Note: this setting is global — it affects all Longhorn system pods (instance-manager, share-manager, backing-image-manager, engine-image daemonset), not just RWX ones. Given you already want the whole node pinned as the sole Longhorn worker, this should be exactly what you want — but it means block/RWO volume instance-managers also get confined to this node too (which you'd already set up in Part 2 anyway).
 
 4. Verify
 ```bash
