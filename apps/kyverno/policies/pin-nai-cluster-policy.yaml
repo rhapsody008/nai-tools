@@ -27,7 +27,7 @@ spec:
         patchStrategicMerge:
           spec:
             nodeSelector:
-              longhorn-system-managed: "true"
+              node.cluster.x-k8s.io/longhorn-system-managed: "true"
 
     - name: default-storageclass-for-pvc
       match:
@@ -63,4 +63,4 @@ spec:
         patchStrategicMerge:
           spec:
             nodeSelector:
-              longhorn-system-managed: "true"
+              node.cluster.x-k8s.io/longhorn-system-managed: "true"

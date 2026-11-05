@@ -33,14 +33,16 @@ Any PVC created with accessModes: [ReadWriteMany] against this StorageClass will
 
 Node/disk tags above control replica placement, but the share-manager pod is a regular Deployment scheduled by k8s, not automatically tied to the tag. To lock it (and instance-manager, backing-image-manager) to the GPU node:
 
+Set the label `node.cluster.x-k8s.io/longhorn-system-managed=true` on the GPU node pool in NKP. Cluster API only syncs Machine labels to the Node for allowed prefixes (`node.cluster.x-k8s.io/`, `node-role.kubernetes.io/`, and NKP's `nvidia.com/`, `nutanix.com/`, `amd.com/`); an unprefixed label like `longhorn-system-managed` stays on the Machine. For a node outside a node pool:
+
 ```bash
-kubectl label node <gpu-node-name> longhorn-system-managed=true
+kubectl label node <gpu-node-name> node.cluster.x-k8s.io/longhorn-system-managed=true
 ```
 Then set the Longhorn global setting:
 
 ```bash
 kubectl -n longhorn-system patch settings.longhorn.io system-managed-components-node-selector \
-  --type merge -p '{"value":"longhorn-system-managed:true"}'
+  --type merge -p '{"value":"node.cluster.x-k8s.io/longhorn-system-managed:true"}'
 ```
 (Or via UI: Settings → General → "System Managed Components Node Selector".)
 
