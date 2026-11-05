@@ -20,7 +20,7 @@ ingress:
       noTLSVerify: true
       originServerName: https://pc.yolocal.cloud
   - hostname: nai.yolocal.cloud
-    service: https://171.16.0.66
+    service: https://171.16.0.82
     originRequest:
       noTLSVerify: true
       originServerName: https://nai.yolocal.cloud
