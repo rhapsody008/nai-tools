@@ -1,11 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # Apps synced to this cluster. Add/remove lines to roll apps over one at a time.
-# cloudflared stays on zy-gpu for now.
+# cloudflared.yaml is kept but not enabled yet.
 resources:
   - gpu-operator.yaml
   - longhorn.yaml
   - kyverno.yaml
   - kyverno-policies.yaml
+  # - cloudflared.yaml
   # - kubernetes-mcp-server.yaml
   # - openwebui.yaml

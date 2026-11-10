@@ -6,7 +6,7 @@ metadata:
   namespace: zy-gpu-workspace
 spec:
   interval: 2m
-  path: ./clusters/zy-gpu-metal/overlays/openwebui
+  path: ./clusters/zy-metal/overlays/openwebui
   prune: true
   sourceRef:
     kind: GitRepository

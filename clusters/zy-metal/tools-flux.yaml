@@ -18,7 +18,7 @@ metadata:
   namespace: zy-gpu-workspace
 spec:
   interval: 10m
-  path: ./clusters/zy-gpu-metal/flux
+  path: ./clusters/zy-metal/flux
   prune: true
   sourceRef:
     kind: GitRepository

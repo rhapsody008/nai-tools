@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: kyverno
+  name: kyverno-policies
   namespace: zy-gpu-workspace
 spec:
   interval: 2m
-  path: ./apps/kyverno/controller
+  path: ./clusters/zy-metal/overlays/kyverno-policies
   prune: true
   sourceRef:
     kind: GitRepository
     name: zy-tools
-  wait: true
-  timeout: 10m
+  dependsOn:
+    - name: kyverno

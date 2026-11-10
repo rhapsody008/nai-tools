@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Synced as its own Flux Kustomization (dependsOn kyverno), because the
+# ClusterPolicy CRD comes from the kyverno chart.
+resources:
+  - pin-nai-cluster-policy.yaml

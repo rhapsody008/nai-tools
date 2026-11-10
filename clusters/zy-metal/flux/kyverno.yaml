@@ -6,8 +6,10 @@ metadata:
   namespace: zy-gpu-workspace
 spec:
   interval: 2m
-  path: ./apps/kyverno
+  path: ./clusters/zy-metal/overlays/kyverno
   prune: true
   sourceRef:
     kind: GitRepository
     name: zy-tools
+  wait: true
+  timeout: 10m

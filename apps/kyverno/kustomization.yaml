@@ -1,7 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-# controller + policies together (zy-gpu). A fresh cluster should sync them as
-# two Flux Kustomizations instead, since the ClusterPolicy CRD comes from the chart.
 resources:
-  - controller
-  - policies
+  - namespace.yaml
+  - helmrepository.yaml
+  - helmrelease.yaml

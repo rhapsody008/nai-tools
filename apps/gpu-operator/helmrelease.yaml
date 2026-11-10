@@ -20,15 +20,3 @@ spec:
   upgrade:
     remediation:
       retries: 3
-  values:
-    driver:
-      enabled: true # explicit, matches chart default — the one option requested
-      version: "615.71.09" # requires chart >= v26.7.1
-    toolkit:
-      env:
-        # Read the on-disk containerd config instead of `containerd config dump`, so the
-        # 99-nvidia.toml drop-in matches the root config version (v3 on NKP nodes).
-        # Otherwise the toolkit writes a v4 drop-in and containerd < 2.3.5 refuses to start.
-        # https://github.com/NVIDIA/aicr/issues/1688
-        - name: RUNTIME_CONFIG_SOURCE
-          value: file

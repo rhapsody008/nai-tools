@@ -4,8 +4,4 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - pdb.yaml
-configMapGenerator:
-  - name: cloudflared-config
-    namespace: cloudflared
-    files:
-      - config.yaml
+# cloudflared-config (config.yaml with tunnel + ingress routes) comes from the cluster overlay.

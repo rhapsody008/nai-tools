@@ -25,7 +25,8 @@ spec:
               containerPort: 8080
           envFrom:
             - configMapRef:
-                name: cluster-config
+                name: cluster-config   # provided by the cluster overlay
+                optional: true
           volumeMounts:
             - name: data
               mountPath: /app/backend/data

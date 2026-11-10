@@ -3,9 +3,11 @@ kind: ConfigMap
 metadata:
   name: cluster-config
   namespace: openwebui
+  labels:
+    app: openwebui
 data:
   WEBUI_NAME: "NAI Playground"
-  CLUSTER_NAME: "zy-gpu"
+  CLUSTER_NAME: "zy-metal"
   ENABLE_SIGNUP: "true"
   DEFAULT_USER_ROLE: "admin"
   COMMUNITY_HUB_BUNDLE_DOWNLOADS_ENABLED: "1"

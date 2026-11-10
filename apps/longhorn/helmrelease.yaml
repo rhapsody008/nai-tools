@@ -21,29 +21,3 @@ spec:
   upgrade:
     remediation:
       retries: 3
-  values:
-    defaultSettings:
-      defaultDataPath: /var/lib/longhorn/
-      guaranteedEngineManagerCPU: 12
-      guaranteedReplicaManagerCPU: 12
-      taintToleration: "node-role.kubernetes.io/control-plane:NoSchedule"
-      # Pin instance-manager, share-manager, engine-image, backing-image-manager and CSI
-      # components to the GPU node. Only applied while no Longhorn volumes are attached.
-      systemManagedComponentsNodeSelector: "node.cluster.x-k8s.io/longhorn-system-managed:true"
-    persistence:
-      defaultClass: false
-      defaultClassReplicaCount: 3
-      reclaimPolicy: Retain
-    csi:
-      attacherReplicaCount: 3
-      provisionerReplicaCount: 3
-      resizerReplicaCount: 3
-      snapshotterReplicaCount: 3
-    longhornManager:
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          effect: NoSchedule
-    longhornDriver:
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          effect: NoSchedule

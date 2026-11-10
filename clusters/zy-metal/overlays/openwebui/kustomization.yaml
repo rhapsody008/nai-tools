@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../apps/openwebui
+  - cluster-config.yaml
+patches:
+  - target:
+      kind: PersistentVolumeClaim
+      name: openwebui-data
+    patch: |-
+      - op: add
+        path: /spec/storageClassName
+        value: nutanix-volume

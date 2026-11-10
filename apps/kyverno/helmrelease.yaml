@@ -24,5 +24,3 @@ spec:
     # ever added, never removed/mutated by Helm — that's expected/safe.
     crds:
       install: true
-    # Fine for a single/small cluster workaround; revisit for HA later.
-    replicaCount: 1

@@ -6,7 +6,7 @@ metadata:
   namespace: zy-gpu-workspace
 spec:
   interval: 2m
-  path: ./apps/cloudflared
+  path: ./clusters/zy-metal/overlays/cloudflared
   prune: true
   sourceRef:
     kind: GitRepository
