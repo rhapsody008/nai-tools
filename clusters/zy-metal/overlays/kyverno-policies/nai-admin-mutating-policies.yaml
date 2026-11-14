@@ -1,0 +1,82 @@
+# Kyverno v1.20+ CEL policies (policies.kyverno.io/v1). Replaces the legacy
+# kyverno.io/v1 ClusterPolicy pin-nai-admin-to-l40, which v1.20 no longer accepts.
+apiVersion: policies.kyverno.io/v1
+kind: MutatingPolicy
+metadata:
+  name: pin-nai-admin-to-l40
+  annotations:
+    policies.kyverno.io/title: Pin nai-admin pods to GPU node
+    policies.kyverno.io/category: Scheduling
+    policies.kyverno.io/description: >-
+      Temporary workaround: mutates every Pod created in the nai-admin
+      namespace to add a nodeSelector targeting the l40 GPU node, so
+      RWX-backed PVCs (which cannot use Longhorn strict-local data
+      locality) stay co-located with the workloads consuming them.
+      Remove this policy once per-component nodeSelector/affinity is
+      wired into the nai-core Helm chart, or once Longhorn RWX gains a
+      stronger locality guarantee.
+spec:
+  # Fail open: if the single Kyverno admission pod is down, pods are admitted
+  # unmutated instead of blocked. Defaults to Fail, so keep this explicit.
+  failurePolicy: Ignore
+  reinvocationPolicy: IfNeeded
+  # Pod-level mutation at admission covers every controller; do not rewrite
+  # Deployment/StatefulSet templates (would cause Helm/Flux drift).
+  autogen:
+    podControllers:
+      controllers: []
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE"]
+        resources: ["pods"]
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: nai-admin
+  mutations:
+    # nodeSelector is an atomic map, so ApplyConfiguration would replace it.
+    # JSONPatch adds the single key (or creates the map). "~1" escapes "/".
+    - patchType: JSONPatch
+      jsonPatch:
+        expression: |-
+          has(object.spec.nodeSelector)
+            ? [JSONPatch{op: "add", path: "/spec/nodeSelector/node.cluster.x-k8s.io~1longhorn-system-managed", value: "true"}]
+            : [JSONPatch{op: "add", path: "/spec/nodeSelector", value: {"node.cluster.x-k8s.io/longhorn-system-managed": "true"}}]
+---
+apiVersion: policies.kyverno.io/v1
+kind: MutatingPolicy
+metadata:
+  name: nai-admin-default-pvc-storageclass
+  annotations:
+    policies.kyverno.io/title: Default StorageClass for nai-admin PVCs
+    policies.kyverno.io/category: Storage
+    policies.kyverno.io/description: >-
+      Temporary workaround: sets storageClassName longhorn-rwx-gpu on
+      PersistentVolumeClaims created in the nai-admin namespace that do
+      not specify one (or specify ""). Never overrides an explicit class.
+      Note: when the cluster has a default StorageClass, the API server
+      fills an unset storageClassName before this webhook runs, so set
+      longhorn-rwx-gpu explicitly in the NAI install. Remove together
+      with pin-nai-admin-to-l40.
+spec:
+  failurePolicy: Ignore
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE"]
+        resources: ["persistentvolumeclaims"]
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: nai-admin
+  matchConditions:
+    # Only when unset or empty; never override an explicit choice.
+    - name: storageclass-unset-or-empty
+      expression: '!has(object.spec.storageClassName) || object.spec.storageClassName == ""'
+  mutations:
+    - patchType: JSONPatch
+      jsonPatch:
+        expression: |-
+          [JSONPatch{op: "add", path: "/spec/storageClassName", value: "longhorn-rwx-gpu"}]
