@@ -11,7 +11,7 @@ The disks must already be mounted persistently on the node (on zy-metal: systemd
 `createDefaultDiskLabeledNodes: true` is set in [helmrelease-values.yaml](helmrelease-values.yaml), so Longhorn creates disks only on nodes carrying the label below, using the disks listed in the annotation. Set them once, by hand, **before** Longhorn is installed; Longhorn reads them only when it first registers the node. They are deliberately not Flux-managed (Flux owning a Node object risks prune deleting it).
 
 ```bash
-kubectl annotate node <gpu-node-name> node.longhorn.io/default-disks-config='[{"name":"longhorn-1","path":"/var/mnt/longhorn1","allowScheduling":true,"storageReserved":53687091200,"tags":["gpu-node"]},{"name":"longhorn-2","path":"/var/mnt/longhorn2","allowScheduling":true,"storageReserved":0,"tags":["gpu-node"]},{"name":"longhorn-3","path":"/var/mnt/longhorn3","allowScheduling":true,"storageReserved":0,"tags":["gpu-node"]},{"name":"longhorn-4","path":"/var/mnt/longhorn4","allowScheduling":true,"storageReserved":0,"tags":["gpu-node"]}]'
+kubectl annotate node <gpu-node-name> node.longhorn.io/default-disks-config='[{"name":"disk1","path":"/var/mnt/longhorn1","allowScheduling":true,"storageReserved":53687091200,"tags":["gpu-node"]},{"name":"disk2","path":"/var/mnt/longhorn2","allowScheduling":true,"storageReserved":0,"tags":["gpu-node"]},{"name":"disk3","path":"/var/mnt/longhorn3","allowScheduling":true,"storageReserved":0,"tags":["gpu-node"]},{"name":"disk4","path":"/var/mnt/longhorn4","allowScheduling":true,"storageReserved":0,"tags":["gpu-node"]}]'
 kubectl annotate node <gpu-node-name> node.longhorn.io/default-node-tags='["gpu-node"]'
 kubectl label node <gpu-node-name> node.longhorn.io/create-default-disk=config
 ```

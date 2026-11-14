@@ -116,10 +116,10 @@ Stop and report if any fails.
 
 ```sh
 kubectl annotate node zy-metal-l40-node node.longhorn.io/default-disks-config='[
-  {"name":"longhorn-1","path":"/var/mnt/longhorn1","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]},
-  {"name":"longhorn-2","path":"/var/mnt/longhorn2","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]},
-  {"name":"longhorn-3","path":"/var/mnt/longhorn3","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]},
-  {"name":"longhorn-4","path":"/var/mnt/longhorn4","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]}]' --kubeconfig kubeconfigs/zy-metal.conf
+  {"name":"disk1","path":"/var/mnt/longhorn1","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]},
+  {"name":"disk2","path":"/var/mnt/longhorn2","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]},
+  {"name":"disk3","path":"/var/mnt/longhorn3","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]},
+  {"name":"disk4","path":"/var/mnt/longhorn4","allowScheduling":true,"storageReserved":<D-7>,"tags":["gpu-node"]}]' --kubeconfig kubeconfigs/zy-metal.conf
 kubectl annotate node zy-metal-l40-node node.longhorn.io/default-node-tags='["gpu-node"]' --kubeconfig kubeconfigs/zy-metal.conf
 kubectl label node zy-metal-l40-node node.longhorn.io/create-default-disk=config --kubeconfig kubeconfigs/zy-metal.conf
 ```

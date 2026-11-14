@@ -28,12 +28,12 @@ Status values: `todo`, `in progress`, `done`, `blocked`, `skipped`.
 | A6 | Docs fixes (Longhorn README, SC comment, README step 7) | CHANGE | done | 2026-11-14 | Longhorn README step 1 now has the label/annotation commands incl. storageReserved |
 | A7 | flux/kustomization.yaml: gpu-operator only | CHANGE | done | 2026-11-14 | longhorn, kyverno, kyverno-policies commented out |
 | A8 | Render check, commit (push later, on ZY's go) | CHANGE | done | 2026-11-14 | Root renders only `gpu-operator`; all 4 overlays render with the new values. Committed locally, not pushed |
-| B1 | Mount units var-mnt-longhorn1..4 | CHANGE | todo | | |
-| B2 | Read longhorn-disk.cfg UUIDs | READ-ONLY | todo | | |
-| B3 | Multipath blacklist (/oem/95_longhorn.yaml + live) | CHANGE | todo | | |
-| B4 | Back up containerd config.toml | CHANGE | todo | | |
-| B5 | Reboot GPU node, verify persistence | CHANGE | todo | | |
-| C1 | Node label + default-disks/default-node-tags annotations | CHANGE | todo | | Needs D-7 |
+| B1 | Mount units var-mnt-longhorn1..4 | CHANGE | done | 2026-11-14 | 4 units enabled (symlinks in local-fs.target.wants). sda1..sdd1 xfs rw on /var/mnt/longhorn1..4, 745G each, 17G/15G/15G/15G used (xfs metadata + ~1.9G data on disk 1) |
+| B2 | Read longhorn-disk.cfg UUIDs | READ-ONLY | done | 2026-11-14 | diskName disk1..disk4, diskUUID 9eb58d6c…, cb5f4a76…, a9d2f6d9…, 9b381e67… (distinct), state ready, 0 replicas each. Disk 1 also: nai/ 160M, llmbench/ 1.7G. C1 disk names changed to disk1..disk4 to match the cfg |
+| B3 | Multipath blacklist (/oem/95_longhorn.yaml + live) | CHANGE | done | 2026-11-14 | `/oem/95_longhorn.yaml` (0600, initramfs files + boot `multipathd reconfigure`); live `/etc/multipath/conf.d/longhorn.conf` written, `multipathd reconfigure` ok; `multipath -t` blacklist shows `device { vendor "IET" product "VIRTUAL-DISK" }`; multipathd active; `multipath -ll` empty (unchanged) |
+| B4 | Back up containerd config.toml | CHANGE | done | 2026-11-14 | `/etc/containerd/config.toml.pre-nvidia` (7483 B, identical to config.toml, mtime 02:20) |
+| B5 | Reboot GPU node, verify persistence | CHANGE | done | 2026-11-14 | Reboot 05:26:20 UTC, booted 05:30:32, Ready 05:32:34. 4 xfs mounts back; kubelet `After=` includes all 4 mount units. `/oem/95_longhorn.yaml` ran (immucore initramfs wrote longhorn.conf, kairos-agent boot ran `multipathd reconfigure`); `multipath -t` shows IET blacklist; `multipath -ll` empty. `systemctl --failed` empty; kubelet, containerd, iscsid, multipathd, host-agent active. All 7 pods on the node Running after ~5 min. config.toml content identical to `.pre-nvidia` but mtime 05:32: boot rewrites it (see issues) |
+| C1 | Node label + default-disks/default-node-tags annotations | CHANGE | done | 2026-11-14 | Annotations read back: disk1 /var/mnt/longhorn1 reserved 53687091200, disk2..4 reserved 0, all tags [gpu-node]; node-tags ["gpu-node"]; label create-default-disk=config. Re-check for stripping at D1 |
 | D1 | Push + bootstrap tools-flux.yaml | CHANGE | todo | | |
 | D2/E1 | gpu-operator rollout and verification | READ-ONLY | todo | | |
 | D3 | Second GPU-node reboot, re-run E1 | CHANGE | todo | | |
@@ -54,4 +54,5 @@ Status values: `todo`, `in progress`, `done`, `blocked`, `skipped`.
 ## Issues found during rollout
 
 - 2026-11-14: `kyverno.io/v1 ClusterPolicy` is deprecated in Kyverno v1.20 (still served, warns on apply). `pin-nai-admin-to-l40` should move to `policies.kyverno.io` MutatingPolicy later; not blocking phase 1.
+- 2026-11-14: the GPU node rewrites `/etc/containerd/config.toml` at every boot (content unchanged, mtime updated). Unknown whether it merges or regenerates; if it regenerates, the NVIDIA toolkit's edits are lost each boot and re-added when the toolkit pod starts (extra containerd restart). D3 (second reboot after gpu-operator) shows which.
 - 2026-11-14: the repo is public on GitHub; these rollout docs (IPs, hostnames) become public on push.
