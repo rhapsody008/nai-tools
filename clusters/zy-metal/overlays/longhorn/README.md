@@ -17,6 +17,8 @@ kubectl label node <gpu-node-name> node.longhorn.io/create-default-disk=config
 ```
 `storageReserved` (bytes) is space Longhorn never schedules into: 50 GiB on disk 1, which also holds non-Longhorn data (`nai/`, `llmbench/`). Longhorn's own minimal-available guard (25% by default) protects the rest.
 
+⚠️ Longhorn treats `"storageReserved":0` in this annotation as "unset" and applies the setting `storageReservedPercentageForDefaultDisk` (default 30%). That's why [helmrelease-values.yaml](helmrelease-values.yaml) sets it to 0, so 0 here really means 0. Without it, check `kubectl -n longhorn-system get nodes.longhorn.io <gpu-node-name> -o yaml` after install and patch `spec.disks.<disk>.storageReserved` as needed.
+
 After Longhorn is installed, later changes go on the Longhorn node object instead (`kubectl -n longhorn-system edit nodes.longhorn.io <gpu-node-name>`, or the UI: Node → Edit Node and Disks).
 
 2. Create a StorageClass for RWX volumes that targets that tag - see gpu-storageclass.yaml

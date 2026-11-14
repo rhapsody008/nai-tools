@@ -11,6 +11,8 @@ spec:
       # nodes labelled node.longhorn.io/create-default-disk=config (see README.md here).
       # Unlabelled nodes get no Longhorn disk.
       createDefaultDiskLabeledNodes: true
+      # Without this, "storageReserved":0 in the disk annotation falls back to 30% of the disk.
+      storageReservedPercentageForDefaultDisk: 0
       taintToleration: "node-role.kubernetes.io/control-plane:NoSchedule"
       # Pin instance-manager, share-manager, engine-image, backing-image-manager and CSI
       # components to the GPU node. Only applied while no Longhorn volumes are attached.
