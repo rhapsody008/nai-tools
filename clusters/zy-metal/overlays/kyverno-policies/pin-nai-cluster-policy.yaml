@@ -14,6 +14,10 @@ metadata:
       wired into the nai-core Helm chart, or once Longhorn RWX gains a
       stronger locality guarantee.
 spec:
+  # Fail open: if the single Kyverno admission pod is down, pods/PVCs are admitted
+  # unmutated instead of blocked cluster-wide.
+  webhookConfiguration:
+    failurePolicy: Ignore
   rules:
     - name: add-nodeselector
       match:

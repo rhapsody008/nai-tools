@@ -8,5 +8,5 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 parameters:
   numberOfReplicas: "1"
-  nodeSelector: "gpu-node" # File storage pinned to GPU server; Need to tag the node/disk (in longhorn) to gpu-node after longhorn is installed
+  nodeSelector: "gpu-node" # File storage pinned to GPU server; node/disk tag gpu-node comes from the node annotations set before install (see README.md)
   fsType: "ext4"

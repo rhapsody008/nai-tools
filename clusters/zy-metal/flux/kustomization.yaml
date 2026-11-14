@@ -4,9 +4,10 @@ kind: Kustomization
 # cloudflared.yaml is kept but not enabled yet.
 resources:
   - gpu-operator.yaml
-  - longhorn.yaml
-  - kyverno.yaml
-  - kyverno-policies.yaml
+  # Phase 1 rollout order (clusters/zy-metal/rollout/): enable after the previous tool is verified.
+  # - longhorn.yaml
+  # - kyverno.yaml
+  # - kyverno-policies.yaml
   # - cloudflared.yaml
   # - kubernetes-mcp-server.yaml
   # - openwebui.yaml

@@ -5,6 +5,8 @@ metadata:
   namespace: gpu-operator
 spec:
   values:
+    nfd:
+      enabled: false # NKP already runs Node Feature Discovery in ns node-feature-discovery
     driver:
       enabled: true # explicit, matches chart default — the one option requested
       version: "615.71.09" # requires chart >= v26.7.1

@@ -57,7 +57,7 @@ kubectl apply -f clusters/<cluster>/tools-flux.yaml
 5. **Bootstrap:** `kubectl apply -f clusters/<cluster>/tools-flux.yaml`
 6. **Verify:** `kubectl -n zy-gpu-workspace get kustomizations,gitrepositories` should show `zy-tools` and each tool Ready.
    - **OpenWebUI skills are not deployed by Flux.** They live in OpenWebUI's database, so a new OpenWebUI starts with none. Add them by hand from [apps/openwebui/skills/](apps/openwebui/skills/) (see [apps/openwebui/README.md](apps/openwebui/README.md)).
-7. **Longhorn GPU pinning** (if longhorn + kyverno are enabled): tag the GPU node and its disks `gpu-node` and set the labels described in [clusters/zy-metal/overlays/longhorn/README.md](clusters/zy-metal/overlays/longhorn/README.md) and below, before NAI creates PVCs in `nai-admin`.
+7. **Longhorn GPU pinning** (if longhorn + kyverno are enabled): **before enabling Longhorn**, mount the GPU node's disks persistently and set the node label and annotations that register and tag them `gpu-node`, as described in [clusters/zy-metal/overlays/longhorn/README.md](clusters/zy-metal/overlays/longhorn/README.md) and below.
 8. **Roll more tools over** by adding lines to `flux/kustomization.yaml` and pushing.
 
 ## Adding new tools
