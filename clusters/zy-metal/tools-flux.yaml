@@ -19,6 +19,8 @@ metadata:
 spec:
   interval: 10m
   path: ./clusters/zy-metal/flux
+  # Workspace namespace for every Flux Kustomization under flux/; they don't set their own.
+  targetNamespace: zy-gpu-workspace
   prune: true
   sourceRef:
     kind: GitRepository

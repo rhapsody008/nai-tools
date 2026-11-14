@@ -44,7 +44,7 @@ kubectl apply -f clusters/<cluster>/tools-flux.yaml
 
 1. **Prepare the cluster.** Attach it to the NKP workspace so Flux (kommander-flux) is running in `zy-gpu-workspace`.
 2. **Create the cluster folder** by copying an existing one, e.g. `cp -R clusters/zy-metal clusters/<cluster>`.
-   - `tools-flux.yaml`: set the root path to `./clusters/<cluster>/flux`.
+   - `tools-flux.yaml`: set the root path to `./clusters/<cluster>/flux`, and the workspace namespace (the two `metadata.namespace` fields and `targetNamespace`). It's the only place the workspace namespace is set; `flux/*.yaml` inherit it via `targetNamespace`.
    - `flux/kustomization.yaml`: keep only the tools you want to start with. Add the rest one at a time later.
    - `flux/*.yaml`: set each path to `./clusters/<cluster>/overlays/<tool>`.
    - `overlays/`: adjust the values and configs for the new cluster (e.g. openwebui `CLUSTER_NAME` in `cluster-config.yaml`, cloudflared routes in `config.yaml`).

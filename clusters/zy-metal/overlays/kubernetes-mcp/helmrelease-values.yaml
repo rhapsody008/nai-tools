@@ -7,7 +7,7 @@ spec:
   values:
     # cluster-admin, bound deliberately for a test env — this server is reachable
     # publicly through the cloudflared tunnel, so the Access policy on
-    # mcp.yourdomain.com is now the only thing standing between the internet and
+    # zy-gpu-k8s-mcp.yolocal.cloud is now the only thing standing between the internet and
     # full cluster control. Revisit if this namespace ever stops being disposable.
     rbac:
       create: true
