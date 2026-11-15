@@ -4,7 +4,7 @@ Plan: [phase1-plan.md](phase1-plan.md). Update this file after every step: statu
 
 Status values: `todo`, `in progress`, `done`, `blocked`, `skipped`.
 
-**Phase 1 status: complete (2026-11-14).** gpu-operator, Longhorn, Kyverno and the nai-admin MutatingPolicies are reconciled by Flux at `e20cbc2`; node advertises nvidia.com/gpu=4. Step F (site facts) done 2026-11-15. Phase 2 (cloudflared, kubernetes-mcp, openwebui) awaits ZY's review.
+**Phase 1 status: complete (2026-11-14).** gpu-operator, Longhorn, Kyverno and the nai-admin MutatingPolicies are reconciled by Flux at `e20cbc2`; node advertises nvidia.com/gpu=4. Step F (site facts) done 2026-11-15. Phase 2: see [phase2-progress.md](phase2-progress.md).
 
 ## Open decisions
 

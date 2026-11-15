@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # Apps synced to this cluster. Add/remove lines to roll apps over one at a time.
-# cloudflared: enabled ahead of phase 2 (urgent); credentials secret applied manually.
+# Phase 2 enabled (cloudflared, kubernetes-mcp-server, openwebui); see rollout/phase2-progress.md. cloudflared credentials secret is applied manually.
 resources:
   - gpu-operator.yaml
   # Phase 1 rollout order (clusters/zy-metal/rollout/): enable after the previous tool is verified.
@@ -9,5 +9,5 @@ resources:
   - kyverno.yaml
   - kyverno-policies.yaml
   - cloudflared.yaml
-  # - kubernetes-mcp-server.yaml
-  # - openwebui.yaml
+  - kubernetes-mcp-server.yaml
+  - openwebui.yaml

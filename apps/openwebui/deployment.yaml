@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/open-webui/open-webui
+          image: ghcr.io/open-webui/open-webui:v0.13.3
           ports:
             - name: openwebui
               containerPort: 8080
@@ -27,6 +27,10 @@ spec:
             - configMapRef:
                 name: cluster-config   # provided by the cluster overlay
                 optional: true
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
           volumeMounts:
             - name: data
               mountPath: /app/backend/data
