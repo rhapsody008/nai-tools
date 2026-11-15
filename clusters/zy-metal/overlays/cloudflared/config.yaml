@@ -15,4 +15,6 @@ ingress:
     originRequest:
       noTLSVerify: true
       originServerName: https://nai.yolocal.cloud
+  - hostname: wskn-ds.yolocal.cloud
+    service: http://172.16.0.248:8080    
   - service: http_status:404
