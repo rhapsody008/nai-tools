@@ -6,7 +6,7 @@ This is to allow NAI to only deploy file share under the GPU node.
 
 1. Register and tag the GPU node's disks (before Longhorn is installed)
 
-The disks must already be mounted persistently on the node (on zy-metal: systemd mount units `var-mnt-longhorn1..4.mount`, see [../../rollout/phase1-plan.md](../../rollout/phase1-plan.md) step B1).
+The disks must already be mounted persistently on the node (on zy-metal: systemd mount units `var-mnt-longhorn1..4.mount`, see [../../rollout/2026-11-16-zy-metal-rollout-record.md](../../rollout/2026-11-16-zy-metal-rollout-record.md), phase 1 plan step B1).
 
 `createDefaultDiskLabeledNodes: true` is set in [helmrelease-values.yaml](helmrelease-values.yaml), so Longhorn creates disks only on nodes carrying the label below, using the disks listed in the annotation. Set them once, by hand, **before** Longhorn is installed; Longhorn reads them only when it first registers the node. They are deliberately not Flux-managed (Flux owning a Node object risks prune deleting it).
 
