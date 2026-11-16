@@ -10,6 +10,10 @@ spec:
     driver:
       enabled: true # explicit, matches chart default — the one option requested
       version: "615.71.09" # requires chart >= v26.7.1
+    devicePlugin:
+      # TEMP DRA test: the standalone DRA driver (overlays/nvidia-dra-driver) serves the GPUs instead.
+      # Device plugin and DRA driver must not both serve the same node. Revert this commit to undo.
+      enabled: false
     toolkit:
       env:
         # Read the on-disk containerd config instead of `containerd config dump`, so the
