@@ -7,6 +7,8 @@ spec:
   values:
     nvidiaDriverRoot: /run/nvidia/driver # gpu-operator driver container; no driver on the Kairos host
     gpuResourcesEnabledOverride: true # device plugin is off in overlays/gpu-operator
+    # TEMP T4a: memory consumable shares, value only (gate comes in T4b). Revert to undo.
+    consumableShares: "memory"
     resources:
       gpus:
         enabled: true
