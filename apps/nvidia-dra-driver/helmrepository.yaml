@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: dra-driver-nvidia
+  namespace: gpu-operator
+spec:
+  type: oci
+  interval: 30m
+  url: oci://registry.k8s.io/dra-driver-nvidia/charts

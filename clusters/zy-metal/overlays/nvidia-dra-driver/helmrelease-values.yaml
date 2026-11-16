@@ -1,0 +1,16 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nvidia-dra-driver
+  namespace: gpu-operator
+spec:
+  values:
+    nvidiaDriverRoot: /run/nvidia/driver # gpu-operator driver container; no driver on the Kairos host
+    gpuResourcesEnabledOverride: true # device plugin is off in overlays/gpu-operator
+    resources:
+      gpus:
+        enabled: true
+      computeDomains:
+        enabled: false # no multi-node NVLink on the L40 node
+    webhook:
+      enabled: false

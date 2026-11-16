@@ -4,6 +4,7 @@ kind: Kustomization
 # Phase 2 enabled (cloudflared, kubernetes-mcp-server, openwebui); see rollout/2026-11-16-zy-metal-rollout-record.md. cloudflared credentials secret is applied manually.
 resources:
   - gpu-operator.yaml
+  - nvidia-dra-driver.yaml # TEMP DRA test; needs devicePlugin off in overlays/gpu-operator
   # Phase 1 rollout order (clusters/zy-metal/rollout/): enable after the previous tool is verified.
   - longhorn.yaml
   - kyverno.yaml

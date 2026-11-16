@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nvidia-dra-driver
+  namespace: gpu-operator # namespace is owned by apps/gpu-operator
+spec:
+  interval: 30m
+  timeout: 10m
+  chart:
+    spec:
+      chart: dra-driver-nvidia-gpu
+      version: "0.5.1" # same DRA driver version that gpu-operator v26.7.2 bundles
+      sourceRef:
+        kind: HelmRepository
+        name: dra-driver-nvidia
+        namespace: gpu-operator
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
