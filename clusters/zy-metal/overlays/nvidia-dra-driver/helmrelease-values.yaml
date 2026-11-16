@@ -9,6 +9,9 @@ spec:
     gpuResourcesEnabledOverride: true # device plugin is off in overlays/gpu-operator
     # TEMP T4a: memory consumable shares, value only (gate comes in T4b). Revert to undo.
     consumableShares: "memory"
+    # TEMP T4b: the driver refuses --consumable-shares without this gate ("requires feature gate ConsumableShares"). Revert to undo.
+    featureGates:
+      ConsumableShares: true
     resources:
       gpus:
         enabled: true
