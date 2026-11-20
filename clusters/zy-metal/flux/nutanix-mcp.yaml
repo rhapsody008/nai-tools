@@ -12,7 +12,7 @@ spec:
   interval: 10m
   url: https://github.com/rhapsody008/ntnx-api-mcp-server.git
   ref:
-    commit: 32a5c78850bc1917573e03e4c22aba989d553d93
+    commit: 2239c157e1013f2609c7ac64bcd484eae0531470
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -31,7 +31,7 @@ spec:
     name: ntnx-api-mcp-server
   images:
     - name: ghcr.io/rhapsody008/ntnx-api-mcp-server
-      newTag: "32a5c78"
+      newTag: "2239c15"
   patches:
     - target:
         kind: ConfigMap
