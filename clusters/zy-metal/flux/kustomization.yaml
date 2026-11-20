@@ -12,3 +12,4 @@ resources:
   - cloudflared.yaml
   - kubernetes-mcp-server.yaml
   - openwebui.yaml
+  - nutanix-mcp.yaml # PC credentials secret nutanix-mcp-secrets is applied manually

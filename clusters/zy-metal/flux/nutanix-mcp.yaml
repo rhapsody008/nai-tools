@@ -1,0 +1,48 @@
+---
+# Nutanix V4 API MCP server, deployed straight from the upstream kustomize base
+# (deploy/k8s in ntnx-api-mcp-server). Bump the commit and the image tag together.
+# Secret nutanix-mcp-secrets (PC credentials) is created manually, never in Git.
+# No MCP_AUTH_TOKEN: public route ntnx-mcp.yolocal.cloud (cloudflared) relies on the Cloudflare Access
+# Bypass limited to the lab egress IP. Keep READ_ONLY_MODE "true" and the PC account read-only while that holds.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: ntnx-api-mcp-server
+spec:
+  interval: 10m
+  url: https://github.com/rhapsody008/ntnx-api-mcp-server.git
+  ref:
+    commit: 32a5c78850bc1917573e03e4c22aba989d553d93
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: nutanix-mcp
+spec:
+  interval: 5m
+  path: ./deploy/k8s
+  prune: true
+  wait: true
+  # First start runs `init` (spec download into the PVC) before the port opens.
+  timeout: 15m
+  sourceRef:
+    kind: GitRepository
+    name: ntnx-api-mcp-server
+  images:
+    - name: ghcr.io/rhapsody008/ntnx-api-mcp-server
+      newTag: "32a5c78"
+  patches:
+    - target:
+        kind: ConfigMap
+        name: nutanix-mcp-config
+      patch: |
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: nutanix-mcp-config
+        data:
+          PC_HOST: "172.16.0.6"
+          PC_INSECURE: "true" # lab PC, self-signed certificate
+          READ_ONLY_MODE: "true"
+          NAMESPACE_OVERRIDE_LIST: "vmm,clustermgmt,prism,dataprotection,datapolicies,aiops,monitoring"
